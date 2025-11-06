@@ -3,7 +3,7 @@
 
 # name: discourse-last-comments
 # about: Embeds the last comments of a topic for external sites
-# version: 0.0.1
+# version: 0.0.2
 # authors: anthony0030
 # url: https://github.com/GoThassos/discourse-last-comments
 # required_version: 2.7.0
@@ -35,6 +35,8 @@ after_initialize do
   module ::DiscourseLastComments
     class LastCommentsController < ::ApplicationController
       requires_plugin ::DiscourseLastComments
+
+      before_action :prepare_embeddable
 
       # Skip all auth / XHR checks for anonymous access
       skip_before_action :check_xhr, raise: false
@@ -69,6 +71,36 @@ after_initialize do
         render :show
       end
 
+      private
+
+        def prepare_embeddable
+          response.headers.delete("X-Frame-Options")
+
+
+          embeddable_host = EmbeddableHost.record_for_url(request.referer)
+
+          @embeddable_css_class =
+            if params[:class_name]
+              " class=\"#{CGI.escapeHTML(params[:class_name])}\""
+            elsif embeddable_host.present? && embeddable_host.class_name.present?
+              Discourse.deprecate(
+                "class_name field of EmbeddableHost has been deprecated. Prefer passing class_name as a parameter.",
+                since: "3.1.0.beta1",
+                drop_from: "3.2",
+              )
+
+              " class=\"#{CGI.escapeHTML(embeddable_host.class_name)}\""
+            else
+              ""
+            end
+
+          @data_referer =
+            if SiteSetting.embed_any_origin? && @data_referer.blank?
+              "*"
+            else
+              request.referer
+            end
+        end
     end
   end
 end
