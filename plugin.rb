@@ -3,7 +3,7 @@
 
 # name: discourse-last-comments
 # about: Embeds the last comments of a topic for external sites
-# version: 0.0.2
+# version: 0.0.3
 # authors: anthony0030
 # url: https://github.com/GoThassos/discourse-last-comments
 # required_version: 2.7.0
