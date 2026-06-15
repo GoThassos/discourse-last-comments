@@ -3,10 +3,10 @@
 
 # name: discourse-last-comments
 # about: Embeds the last comments of a topic for external sites
-# version: 0.0.5
+# version: 0.0.6
 # authors: anthony0030
 # url: https://github.com/GoThassos/discourse-last-comments
-# required_version: 2026.6.0
+# required_version: 2026.6.0-latest
 
 after_initialize do
   # Make sure Rails can find your plugin's views/layouts
